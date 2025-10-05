@@ -32,27 +32,31 @@ h2 {
 }
 
 .card p,
-.delete-btn {
+.delete-btn,
+.check-box {
     background-color: rgb(111, 111, 170);
     font-size: 1.5rem;
     font-weight: bold;
     color: rgb(255, 251, 251);
     min-height: 30px;
     -webkit-text-stroke: 0.5px black;
-    padding: 0.5rem;
+    padding: 0.25rem;
     
 }
 
 
 
 .card {
+   display: flex;
+   flex-direction: column;
+    gap: .5rem;
     background-color: rgb(111, 111, 170);
      border: 5px solid black;
      border-radius: 8px;
 }
 
 
-.open-button {
+.open-dialog {
     border: none;
    border-radius: 5px;
     padding: 1rem;

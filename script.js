@@ -1,87 +1,129 @@
 
-
-function Book(title, author, pages, id) {
+//Constructor function for creating a book object with relevant details
+function Book(title, author, pages, id, read) {
     this.id = id;
     this.title = title;
     this.author = author;
     this.pages = pages;
+    this.read = read;
 }
 
+// Array to store Book objects in the order they were added
 const myLibrary = [];
 
-function addBookToLibrary(title, author, pages) {
+//Function to create a Book object with a UUID and push it to the myLibrary array
+function addBookToLibrary(title, author, pages, read) {
  const id = crypto.randomUUID();
- const book = new Book(title, author, pages, id);
+ const book = new Book(title, author, pages, id, read);
  myLibrary.push(book);
 }
-const container = document.querySelector('.container');
 
+const mainContainer = document.querySelector('.container');
 const dialog = document.querySelector('dialog');
-const popUp = document.querySelector('.open-button')
-const close = document.querySelector('.close')
-const addBtn = document.querySelector('.addBtn')
-popUp.addEventListener('click', (event) => {
+const openDialog = document.querySelector('.open-dialog');
+const closeDialog = document.querySelector('.close');
+const addBtn = document.querySelector('.addBtn');
+
+//Opens the dialog modal when the "openDialog" button is clicked
+openDialog.addEventListener('click', () => {
     dialog.showModal();
 });
-   const inputTitle = document.querySelector('#title');
+
+//Form input elements 
+  const inputTitle = document.querySelector('#title');
   const inputAuthor = document.querySelector('#author');
   const inputPages = document.querySelector('#pages');
-close.addEventListener('click', () => {
-    dialog.close();
-    inputTitle.value = '';
- inputAuthor.value = '';
- inputPages.value = '';
-})
+  const inputCheck = document.querySelector('#read');
 
-addBtn.addEventListener("click", (event) => {
-     if (!inputAuthor.value || !inputTitle.value || !inputPages.value) {
-    } else {
-    
- event.preventDefault();
+  //Add a read status on the Book container and syncs it with the read property
+  Book.prototype.readStatus = function(bookContainer) {
+    const readContainer = document.createElement('div');
+            readContainer.classList.add('check-box');
 
-  addBookToLibrary(inputTitle.value, inputAuthor.value, inputPages.value);
+    const readBtn = document.createElement('button');  
+        readBtn.textContent =  this.read ?  'Read the book Congrats!' : 'Not read';
+        readContainer.appendChild(readBtn);
 
-  const latestBook = myLibrary[myLibrary.length - 1];
- const unique = latestBook.id;
-      const div = document.createElement('div')
-      
-    const title = document.createElement('p')
-    const author = document.createElement('p')
-     const pages = document.createElement('p')
-    div.classList.add('card');
-    div.setAttribute('data-id', unique)
-    container.appendChild(div);
-    title.textContent = `Title: ${latestBook.title}`;
-    div.appendChild(title);
-     author.textContent = `Author: ${latestBook.author}`;
-    div.appendChild(author);
-     pages.textContent = `Pages: ${latestBook.pages}`;
-    div.appendChild(pages);
-     dialog.close();
+    bookContainer.appendChild(readContainer);
+   
+    readBtn.addEventListener('click', () => {
+
+        this.read = !this.read;
+        readBtn.textContent =  this.read ?  'Read the book Congrats!' : 'Not read';
+    });
+};
+
+
+//Clear the input data from the form
+function clearInput () {
  inputTitle.value = '';
  inputAuthor.value = '';
  inputPages.value = '';
- const deleteBtn = document.createElement('button')
- deleteBtn.textContent = 'Delete';
- deleteBtn.classList.add('delete-btn');
- div.appendChild(deleteBtn);
-   console.log(myLibrary);
-deleteBtn.addEventListener('click', (e) => {
-    const unique = e.target.closest('[data-id]')
+ inputCheck.checked = false;
+}
+
+//Close the dialog after the "close" button gets clicked
+closeDialog.addEventListener('click', () => {
+    dialog.close();
+    clearInput();
+});
+// Targets the book on the UI and array to remove 
+function targetBook (deleteBtn) {
+         deleteBtn.addEventListener('click', (e) => {
+    const currentBook = e.target.closest('[data-id]')
     for(let i = 0; i < myLibrary.length; i++){
-       if ( unique.dataset.id === myLibrary[i].id ) {
+       if ( currentBook.dataset.id === myLibrary[i].id ) {
          myLibrary.splice(i, 1)
-         console.log(myLibrary);
-         unique.remove();
+         currentBook.remove();
          break;
        }
 
     }
+});
+} 
+//Creates the delete button to erase the book from the UI and array
+function deleteBtn (bookContainer) {
+     const deleteBtn = document.createElement('button')
+        deleteBtn.textContent = 'Delete';
+             deleteBtn.classList.add('delete-btn');
+                 bookContainer.appendChild(deleteBtn);
+                 targetBook (deleteBtn);
 
+};
 
-})
+//Create the elements for the input data and combine them into the book container
+function createBook() {
+    const latestBook = myLibrary[myLibrary.length - 1];
+    const uniqueId = latestBook.id;
+    const bookContainer = document.createElement('div')
+        bookContainer.classList.add('card');
+          bookContainer.setAttribute('data-id', uniqueId)
+             mainContainer.appendChild(bookContainer);
 
-    }
+    const title = document.createElement('p')
+        title.textContent = `Title: ${latestBook.title}`;
+            bookContainer.appendChild(title);
+    const author = document.createElement('p');
+         author.textContent = `Author: ${latestBook.author}`;
+            bookContainer.appendChild(author);
+    const pages = document.createElement('p')
+        pages.textContent = `Pages: ${latestBook.pages}`;
+            bookContainer.appendChild(pages);                    
+   
+    latestBook.readStatus(bookContainer);
+    deleteBtn(bookContainer);
+    
+};
+
+//Handles the add button inside the dialog: validates inputs, add book to the library, update UI, close dialog, and clears form 
+addBtn.addEventListener("click", (event) => {
+     if (!inputAuthor.value || !inputTitle.value || !inputPages.value) return;
+         event.preventDefault();
+            addBookToLibrary(inputTitle.value, inputAuthor.value, inputPages.value, inputCheck.checked);
+         createBook();
+         dialog.close();
+         clearInput();
 });
 
-  
+
+

@@ -11,31 +11,33 @@
     <h2>Library!</h2>
     <div class="container">
     </div>
-      <div class="form-popup">
         <dialog>
         <form action="" >
-        <div class="form">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" required>
+          <div class="form">
+                <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
             </div>
               <div class="form">
-            <label for="author">Author</label>
-                <input type="text" id="author" name="author" required>
-           </div>
-               <div class="form">
-                <label for="pages">Pages</label>
-                <input type="number" name="pages" id="pages" required>
+                  <label for="author">Author</label>
+                     <input type="text" id="author" name="author" required>
+              </div>
+                     <div class="form">
+                        <label for="pages">Pages</label>
+                             <input type="number" name="pages" id="pages" required>
                </div>
-             <div class="dialog-buttons">
-                <button formmethod="dialog" class="close" autofocus>Close</button>
-                 <button class="addBtn">Add</button>
+                     <div class="form">
+                          <label for="read">Read?</label>
+                              <input type="checkbox" name="readStatus" id="read">
+               </div>
+                     <div class="dialog-buttons">
+                         <button formmethod="dialog" class="close" autofocus>Close</button>
+                           <button class="addBtn">Add</button>
                  </div>
             
         </form>
       
         </dialog>
-    </div>
-    <button class="open-button">Add Book!</button>
+    <button class="open-dialog">Add Book!</button>
     </div>
     <script src="script.js"></script>
 
